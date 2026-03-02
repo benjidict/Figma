@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrustNest — Secure Home Essentials Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --warm-white: #FFFDF9;
+    --forest: #1E3A2F;
+    --forest-mid: #2D5442;
+    --gold: #C8973A;
+    --gold-light: #E8B84B;
+    --rust: #C45C2A;
+    --sage: #7A9E8C;
+    --sage-light: #A8C4B5;
+    --charcoal: #2A2A2A;
+    --muted: #7A7570;
+    --border: #E2DBD0;
+    --shadow: 0 8px 32px rgba(30,58,47,0.10);
+    --shadow-lg: 0 20px 60px rgba(30,58,47,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 60px;
+    background: rgba(250,246,240,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .logo-icon {
+    width: 38px; height: 38px; background: var(--forest);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 22px; height: 22px; fill: var(--gold); }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--forest); }
+  .logo-text span { color: var(--gold); }
+  nav ul { list-style: none; display: flex; gap: 36px; align-items: center; }
+  nav ul a { text-decoration: none; color: var(--charcoal); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; cursor: pointer; }
+  nav ul a:hover { color: var(--forest); }
+  nav ul a.active-link { color: var(--forest); font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 2px; }
+  .nav-actions { display: flex; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 24px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.22s; border: none; text-decoration: none; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--forest); color: var(--forest); }
+  .btn-outline:hover { background: var(--forest); color: var(--cream); }
+  .btn-primary { background: var(--forest); color: var(--cream); }
+  .btn-primary:hover { background: var(--forest-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,47,0.25); }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ─── PAGES ─── */
+  .page { display: none; min-height: 100vh; padding-top: 74px; animation: fadeIn 0.35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: calc(100vh - 74px);
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 80px 60px;
+    gap: 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; right: -100px; top: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,151,58,0.12) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(30,58,47,0.08); border: 1px solid rgba(30,58,47,0.15);
+    padding: 6px 14px; border-radius: 50px; font-size: 0.78rem;
+    font-weight: 600; color: var(--forest); margin-bottom: 24px;
+    width: fit-content;
+  }
+  .hero-badge span { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.8rem; line-height: 1.1; color: var(--forest); margin-bottom: 22px; }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { font-size: 1.05rem; color: var(--muted); line-height: 1.8; margin-bottom: 36px; max-width: 480px; }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-trust { display: flex; align-items: center; gap: 18px; margin-top: 44px; padding-top: 32px; border-top: 1px solid var(--border); }
+  .trust-stat { text-align: center; }
+  .trust-stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--forest); }
+  .trust-stat span { font-size: 0.78rem; color: var(--muted); }
+  .trust-divider { width: 1px; height: 36px; background: var(--border); }
+  .hero-visual { position: relative; }
+  .hero-card {
+    background: white; border-radius: 20px; padding: 28px; box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+  }
+  .hero-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .hero-card-title { font-weight: 600; font-size: 0.92rem; color: var(--forest); }
+  .escrow-badge { background: rgba(30,58,47,0.08); color: var(--forest); font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+  .product-list { display: flex; flex-direction: column; gap: 14px; }
+  .product-item { display: flex; gap: 14px; align-items: center; padding: 12px; background: var(--cream); border-radius: 12px; }
+  .product-img { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+  .product-info { flex: 1; }
+  .product-name { font-weight: 600; font-size: 0.88rem; color: var(--charcoal); }
+  .product-seller { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .verified-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.68rem; color: var(--forest); background: rgba(30,58,47,0.1); padding: 2px 7px; border-radius: 10px; margin-top: 4px; }
+  .product-price { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--forest); }
+  .escrow-notice { margin-top: 18px; background: linear-gradient(135deg, var(--forest), var(--forest-mid)); color: white; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; font-size: 0.82rem; }
+  .escrow-icon { font-size: 1.3rem; }
+  .float-card { position: absolute; background: white; border-radius: 14px; padding: 12px 16px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 600; }
+  .float-card-1 { top: -20px; right: -20px; color: var(--forest); }
+  .float-card-2 { bottom: -18px; left: -20px; color: var(--rust); }
+
+  /* ─── FEATURES ─── */
+  .section { padding: 100px 60px; }
+  .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: var(--forest); margin-bottom: 16px; }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 540px; }
+  .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 60px; }
+  .feature-card {
+    background: white; border-radius: 20px; padding: 32px; border: 1px solid var(--border);
+    transition: all 0.3s; cursor: default;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .feature-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+  .feature-icon.green { background: rgba(30,58,47,0.1); }
+  .feature-icon.gold { background: rgba(200,151,58,0.12); }
+  .feature-icon.rust { background: rgba(196,92,42,0.1); }
+  .feature-icon.sage { background: rgba(122,158,140,0.15); }
+  .feature-card h3 { font-weight: 700; font-size: 1.05rem; color: var(--forest); margin-bottom: 10px; }
+  .feature-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-section { background: var(--forest); color: white; }
+  .how-section .section-label { color: var(--gold-light); }
+  .how-section .section-title { color: white; }
+  .how-section .section-sub { color: rgba(255,255,255,0.6); }
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 60px; }
+  .step { text-align: center; }
+  .step-num { width: 52px; height: 52px; border-radius: 50%; background: rgba(200,151,58,0.2); border: 2px solid var(--gold); color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+  .step h4 { font-weight: 600; font-size: 0.95rem; color: white; margin-bottom: 10px; }
+  .step p { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+  .step-connector { display: flex; align-items: center; justify-content: center; margin-top: 26px; }
+
+  /* ─── LISTINGS PREVIEW ─── */
+  .listings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 50px; }
+  .listing-card {
+    background: white; border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--border); transition: all 0.3s; cursor: pointer;
+  }
+  .listing-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+  .listing-img { height: 160px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; }
+  .listing-tag { position: absolute; top: 12px; left: 12px; background: var(--forest); color: white; font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+  .listing-body { padding: 18px; }
+  .listing-title { font-weight: 700; font-size: 0.92rem; color: var(--charcoal); margin-bottom: 6px; }
+  .listing-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .listing-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--forest); font-weight: 700; }
+  .listing-location { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .seller-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .seller-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--sage); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: white; font-weight: 700; }
+  .seller-name { font-size: 0.78rem; color: var(--muted); }
+  .seller-verified { display: flex; align-items: center; gap: 3px; font-size: 0.68rem; color: var(--forest); font-weight: 600; margin-left: auto; }
+
+  /* ─── CTA BANNER ─── */
+  .cta-banner {
+    margin: 0 60px 80px; background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 100%);
+    border-radius: 24px; padding: 64px; display: flex; align-items: center; justify-content: space-between;
+    gap: 40px; overflow: hidden; position: relative;
+  }
+  .cta-banner::before { content: ''; position: absolute; right: -60px; top: -60px; width: 300px; height: 300px; background: rgba(200,151,58,0.12); border-radius: 50%; }
+  .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: white; margin-bottom: 14px; }
+  .cta-banner p { color: rgba(255,255,255,0.65); font-size: 0.95rem; line-height: 1.7; max-width: 420px; }
+  .cta-actions { display: flex; gap: 12px; flex-shrink: 0; }
+
+  /* ─── FOOTER ─── */
+  footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 48px 60px; display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; }
+  footer .logo-text { color: white; }
+
+  /* ─── AUTH PAGES ─── */
+  .auth-wrapper {
+    min-height: calc(100vh - 74px);
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .auth-left {
+    background: var(--forest);
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 80px 60px; position: relative; overflow: hidden;
+  }
+  .auth-left::before { content: ''; position: absolute; bottom: -80px; right: -80px; width: 400px; height: 400px; background: rgba(200,151,58,0.1); border-radius: 50%; }
+  .auth-left-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .auth-left h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: white; line-height: 1.2; margin-bottom: 20px; }
+  .auth-left p { color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.8; margin-bottom: 40px; }
+  .auth-perks { display: flex; flex-direction: column; gap: 16px; }
+  .auth-perk { display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.8); font-size: 0.88rem; }
+  .perk-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(200,151,58,0.2); border: 1px solid rgba(200,151,58,0.3); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .auth-right { display: flex; align-items: center; justify-content: center; padding: 60px 80px; background: var(--warm-white); }
+  .auth-form-box { width: 100%; max-width: 420px; }
+  .auth-form-box h3 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--forest); margin-bottom: 8px; }
+  .auth-form-box .sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 36px; }
+  .form-group { margin-bottom: 20px; }
+  label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--charcoal); margin-bottom: 7px; }
+  input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+    width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    background: white; color: var(--charcoal); transition: border-color 0.2s;
+    outline: none;
+  }
+  input:focus { border-color: var(--forest); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .auth-submit { width: 100%; padding: 14px; border: none; border-radius: 10px; background: var(--forest); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.22s; margin-top: 8px; letter-spacing: 0.02em; }
+  .auth-submit:hover { background: var(--forest-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,47,0.25); }
+  .auth-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; color: var(--muted); font-size: 0.78rem; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .auth-switch { text-align: center; font-size: 0.85rem; color: var(--muted); margin-top: 22px; }
+  .auth-switch a { color: var(--forest); font-weight: 700; text-decoration: none; cursor: pointer; }
+  .auth-switch a:hover { text-decoration: underline; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+  .checkbox-row input[type="checkbox"] { margin-top: 2px; accent-color: var(--forest); }
+  .forgot { float: right; font-size: 0.78rem; color: var(--forest); font-weight: 600; text-decoration: none; cursor: pointer; }
+  .forgot:hover { text-decoration: underline; }
+
+  /* ─── CLIENT DASHBOARD ─── */
+  .client-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 74px); }
+  .sidebar { background: var(--forest); padding: 32px 0; display: flex; flex-direction: column; }
+  .sidebar-section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 0 24px; margin: 20px 0 8px; }
+  .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 11px 24px; font-size: 0.88rem; color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; text-decoration: none; }
+  .sidebar-item:hover { color: white; background: rgba(255,255,255,0.06); border-left-color: rgba(200,151,58,0.4); }
+  .sidebar-item.active { color: white; background: rgba(255,255,255,0.1); border-left-color: var(--gold); font-weight: 600; }
+  .sidebar-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+  .client-main { background: var(--cream); overflow-y: auto; }
+  .client-topbar { background: white; border-bottom: 1px solid var(--border); padding: 18px 36px; display: flex; align-items: center; justify-content: space-between; }
+  .client-topbar h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--forest); }
+  .topbar-right { display: flex; align-items: center; gap: 18px; }
+  .notif-btn { position: relative; width: 38px; height: 38px; border-radius: 10px; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
+  .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--rust); border-radius: 50%; border: 2px solid white; }
+  .user-chip { display: flex; align-items: center; gap: 10px; background: var(--cream); border: 1px solid var(--border); padding: 6px 14px 6px 6px; border-radius: 50px; cursor: pointer; }
+  .user-chip-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--forest); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+  .user-chip-name { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+  .client-content { padding: 36px; }
+  .welcome-banner { background: linear-gradient(135deg, var(--forest), var(--forest-mid)); border-radius: 18px; padding: 30px 36px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+  .welcome-banner h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 6px; }
+  .welcome-banner p { color: rgba(255,255,255,0.65); font-size: 0.88rem; }
+  .escrow-pill { background: rgba(200,151,58,0.2); border: 1px solid rgba(200,151,58,0.4); color: var(--gold-light); font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-top: 12px; width: fit-content; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 30px; }
+  .stat-card { background: white; border-radius: 16px; padding: 22px 24px; border: 1px solid var(--border); }
+  .stat-card-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .stat-card-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--forest); font-weight: 700; }
+  .stat-card-sub { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+  .content-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; }
+  .card { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .card-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-header h4 { font-weight: 700; font-size: 0.95rem; color: var(--forest); }
+  .card-body { padding: 20px 24px; }
+  .order-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .order-item:last-child { border-bottom: none; }
+  .order-img { width: 44px; height: 44px; border-radius: 10px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .order-info { flex: 1; }
+  .order-name { font-weight: 600; font-size: 0.88rem; color: var(--charcoal); }
+  .order-date { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .status-pill { font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .status-escrow { background: rgba(200,151,58,0.12); color: #8B6520; }
+  .status-delivered { background: rgba(30,58,47,0.1); color: var(--forest); }
+  .status-pending { background: rgba(196,92,42,0.1); color: var(--rust); }
+  .order-amount { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--forest); }
+  .recommend-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .recommend-item:last-child { border-bottom: none; }
+  .rec-img { width: 48px; height: 48px; border-radius: 10px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  .rec-info { flex: 1; }
+  .rec-name { font-size: 0.85rem; font-weight: 600; color: var(--charcoal); }
+  .rec-price { font-size: 0.8rem; color: var(--forest); font-weight: 700; margin-top: 2px; }
+  .rec-badge { font-size: 0.68rem; background: rgba(30,58,47,0.08); color: var(--forest); padding: 2px 7px; border-radius: 8px; font-weight: 600; }
+  .btn-sm { padding: 6px 14px; font-size: 0.78rem; border-radius: 7px; }
+  .logout-btn { margin-top: auto; padding: 11px 24px; display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: rgba(255,255,255,0.5); cursor: pointer; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 20px; transition: color 0.2s; }
+  .logout-btn:hover { color: rgba(255,255,255,0.8); }
+
+  /* ─── BROWSE PAGE ─── */
+  .browse-hero { background: var(--forest); padding: 60px; }
+  .browse-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: white; margin-bottom: 12px; }
+  .browse-hero h1 span { color: var(--gold); }
+  .browse-hero p { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 32px; }
+  .search-bar { display: flex; gap: 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-lg); max-width: 640px; }
+  .search-bar input { flex: 1; border: none; outline: none; padding: 16px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal); }
+  .search-bar select { border: none; border-left: 1px solid var(--border); outline: none; padding: 16px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--muted); background: white; cursor: pointer; }
+  .search-bar button { background: var(--forest); color: white; border: none; padding: 16px 28px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+  .search-bar button:hover { background: var(--forest-mid); }
+  .browse-body { display: grid; grid-template-columns: 240px 1fr; gap: 32px; padding: 40px 60px; }
+  .filter-panel { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 24px; height: fit-content; position: sticky; top: 90px; }
+  .filter-panel h3 { font-weight: 700; font-size: 0.95rem; color: var(--forest); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .filter-panel h3 span { font-size: 0.75rem; color: var(--gold); font-weight: 600; cursor: pointer; }
+  .filter-group { margin-bottom: 22px; }
+  .filter-group label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--charcoal); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .filter-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-chip { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 0.78rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.2s; background: white; }
+  .filter-chip:hover, .filter-chip.active { background: var(--forest); color: white; border-color: var(--forest); }
+  .price-range { display: flex; gap: 8px; align-items: center; }
+  .price-range input { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .price-range input:focus { border-color: var(--forest); }
+  .price-range span { color: var(--muted); font-size: 0.82rem; }
+  .browse-results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .browse-results-header p { color: var(--muted); font-size: 0.88rem; }
+  .browse-results-header p strong { color: var(--charcoal); }
+  .sort-select { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--charcoal); outline: none; cursor: pointer; background: white; }
+  .browse-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .browse-card { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s; cursor: pointer; }
+  .browse-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .browse-card-img { height: 150px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; }
+  .browse-card-img .tag { position: absolute; top: 10px; left: 10px; font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .tag-new { background: var(--forest); color: white; }
+  .tag-used { background: var(--gold); color: white; }
+  .tag-like-new { background: var(--sage); color: white; }
+  .browse-card-body { padding: 16px; }
+  .browse-card-name { font-weight: 700; font-size: 0.9rem; color: var(--charcoal); margin-bottom: 6px; }
+  .browse-card-loc { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; }
+  .browse-card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .browse-card-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--forest); }
+  .browse-card-seller { display: flex; align-items: center; gap: 6px; }
+  .browse-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--forest); color: white; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .browse-seller-name { font-size: 0.72rem; color: var(--muted); }
+  .browse-verified { font-size: 0.68rem; color: var(--forest); font-weight: 700; }
+  .browse-card-divider { width: 100%; height: 1px; background: var(--border); margin: 10px 0; }
+  .active-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .active-filter-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(30,58,47,0.08); color: var(--forest); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+  .active-filter-tag button { background: none; border: none; color: var(--forest); cursor: pointer; font-size: 0.85rem; line-height: 1; padding: 0; }
+  .pagination { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 40px; }
+  .page-btn { width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border); background: white; color: var(--charcoal); font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .page-btn:hover, .page-btn.active { background: var(--forest); color: white; border-color: var(--forest); }
+
+  /* ─── HOW IT WORKS PAGE ─── */
+  .hiw-hero { background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 100%); padding: 80px 60px; text-align: center; position: relative; overflow: hidden; }
+  .hiw-hero::before { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,151,58,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hiw-hero .section-label { color: var(--gold-light); justify-content: center; }
+  .hiw-hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: white; margin-bottom: 18px; }
+  .hiw-hero p { color: rgba(255,255,255,0.65); font-size: 1rem; line-height: 1.8; max-width: 580px; margin: 0 auto; }
+  .hiw-steps-section { padding: 80px 60px; }
+  .hiw-step-row { display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; gap: 0; margin-bottom: 40px; }
+  .hiw-step-row.reverse { direction: rtl; }
+  .hiw-step-row.reverse > * { direction: ltr; }
+  .hiw-step-card { background: white; border-radius: 20px; border: 1px solid var(--border); padding: 36px; transition: all 0.3s; }
+  .hiw-step-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .hiw-step-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: rgba(30,58,47,0.08); line-height: 1; margin-bottom: 8px; }
+  .hiw-step-icon { font-size: 2.2rem; margin-bottom: 16px; }
+  .hiw-step-card h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--forest); margin-bottom: 10px; }
+  .hiw-step-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+  .hiw-step-card ul { margin-top: 14px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .hiw-step-card ul li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: var(--muted); }
+  .hiw-step-card ul li::before { content: '✓'; color: var(--forest); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .hiw-connector { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .hiw-connector-line { width: 2px; height: 60px; background: linear-gradient(to bottom, var(--border), var(--sage-light)); }
+  .hiw-connector-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 3px solid white; box-shadow: 0 0 0 2px var(--gold); }
+  .hiw-visual { background: var(--cream); border-radius: 20px; border: 1px solid var(--border); padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 220px; }
+  .hiw-visual-inner { width: 100%; }
+  .mock-escrow-flow { display: flex; flex-direction: column; gap: 12px; }
+  .escrow-flow-step { display: flex; align-items: center; gap: 12px; background: white; border-radius: 12px; padding: 12px 16px; border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+  .escrow-flow-step .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-active { background: var(--gold); }
+  .dot-done { background: var(--forest); }
+  .dot-pending { background: var(--border); }
+  .mock-kyc { display: flex; flex-direction: column; gap: 10px; }
+  .kyc-row { display: flex; align-items: center; gap: 12px; background: white; border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border); font-size: 0.82rem; }
+  .kyc-check { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
+  .check-done { background: rgba(30,58,47,0.1); color: var(--forest); }
+  .check-pend { background: rgba(200,151,58,0.12); color: var(--gold); }
+  .mock-dispute { display: flex; flex-direction: column; gap: 10px; }
+  .dispute-row { background: white; border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); font-size: 0.78rem; }
+  .dispute-label { font-weight: 700; color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .dispute-evidence { display: flex; gap: 6px; }
+  .evidence-thumb { width: 36px; height: 36px; border-radius: 6px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .mock-confirm { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
+  .confirm-circle { width: 64px; height: 64px; border-radius: 50%; background: rgba(30,58,47,0.08); border: 3px solid var(--forest); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto; }
+  .confirm-label { font-weight: 700; color: var(--forest); font-size: 0.9rem; }
+  .confirm-sub { color: var(--muted); font-size: 0.78rem; }
+  .hiw-faq { background: white; padding: 80px 60px; }
+  .hiw-faq .section-title { margin-bottom: 40px; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .faq-item { border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .faq-q { padding: 18px 22px; font-weight: 700; font-size: 0.9rem; color: var(--forest); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+  .faq-q:hover { background: var(--cream); }
+  .faq-q span { font-size: 1rem; color: var(--gold); transition: transform 0.3s; }
+  .faq-q span.open { transform: rotate(45deg); }
+  .faq-a { padding: 0 22px; max-height: 0; overflow: hidden; transition: all 0.3s; font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+  .faq-a.open { max-height: 200px; padding: 0 22px 18px; }
+  .hiw-cta { background: var(--forest); padding: 80px 60px; text-align: center; }
+  .hiw-cta h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: white; margin-bottom: 14px; }
+  .hiw-cta p { color: rgba(255,255,255,0.65); font-size: 1rem; margin-bottom: 32px; }
+  .hiw-cta-btns { display: flex; gap: 14px; justify-content: center; }
+
+  /* ─── NAV HIDDEN WHEN LOGGED IN ─── */
+  body.logged-in nav { display: none !important; }
+  body.logged-in .page { padding-top: 0; }
+
+  /* ─── CLIENT SUB-PAGES ─── */
+  .sub-page { display: none; }
+  .sub-page.active { display: block; animation: fadeIn 0.3s ease; }
+  .client-main { background: var(--cream); overflow-y: auto; min-height: 100vh; }
+  .inner-header { background: white; border-bottom: 1px solid var(--border); padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; }
+  .inner-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--forest); }
+  .inner-header .breadcrumb { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .inner-body { padding: 30px 36px; }
+  .client-browse-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .orders-table { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+  .orders-table-header { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr; padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .orders-table-row { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr; padding: 16px 20px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.2s; }
+  .orders-table-row:last-child { border-bottom: none; }
+  .orders-table-row:hover { background: var(--cream); }
+  .order-product { display: flex; align-items: center; gap: 12px; }
+  .order-product-img { width: 40px; height: 40px; border-radius: 8px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .order-product-name { font-weight: 600; font-size: 0.85rem; color: var(--charcoal); }
+  .order-product-seller { font-size: 0.72rem; color: var(--muted); }
+  .table-cell { font-size: 0.83rem; color: var(--charcoal); }
+  .table-amount { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--forest); font-size: 0.9rem; }
+  .table-actions { display: flex; gap: 6px; }
+  .escrow-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
+  .escrow-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+  .escrow-card-title { font-weight: 700; font-size: 0.92rem; color: var(--charcoal); }
+  .escrow-card-sub { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+  .escrow-amount { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--forest); }
+  .escrow-progress { display: flex; align-items: center; gap: 0; margin-top: 4px; }
+  .ep-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+  .ep-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; z-index: 1; }
+  .ep-dot.done { background: var(--forest); color: white; }
+  .ep-dot.current { background: var(--gold); color: white; box-shadow: 0 0 0 4px rgba(200,151,58,0.2); }
+  .ep-dot.todo { background: var(--border); color: var(--muted); }
+  .ep-label { font-size: 0.65rem; color: var(--muted); margin-top: 5px; text-align: center; font-weight: 600; }
+  .ep-line { flex: 1; height: 2px; background: var(--border); margin-top: -14px; }
+  .ep-line.done { background: var(--forest); }
+  .upload-zone { border: 2px dashed var(--border); border-radius: 16px; padding: 50px; text-align: center; background: white; cursor: pointer; transition: all 0.2s; }
+  .upload-zone:hover { border-color: var(--forest); background: rgba(30,58,47,0.02); }
+  .upload-icon { font-size: 2.5rem; margin-bottom: 14px; }
+  .upload-zone h4 { font-weight: 700; font-size: 1rem; color: var(--forest); margin-bottom: 8px; }
+  .upload-zone p { font-size: 0.82rem; color: var(--muted); }
+  .uploaded-files { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .uploaded-file { display: flex; align-items: center; gap: 12px; background: white; border-radius: 10px; padding: 12px 16px; border: 1px solid var(--border); font-size: 0.82rem; }
+  .uploaded-file-icon { font-size: 1.3rem; }
+  .uploaded-file-name { flex: 1; font-weight: 600; color: var(--charcoal); }
+  .uploaded-file-size { font-size: 0.72rem; color: var(--muted); }
+  .uploaded-file-status { font-size: 0.7rem; font-weight: 700; color: var(--forest); background: rgba(30,58,47,0.08); padding: 2px 8px; border-radius: 10px; }
+  .dispute-card { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+  .dispute-card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .dispute-card-body { padding: 18px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .dispute-side h5 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 10px; }
+  .dispute-img-row { display: flex; gap: 8px; }
+  .dispute-img-box { width: 60px; height: 60px; border-radius: 10px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid var(--border); }
+  .messages-layout { display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 61px); }
+  .msg-list { border-right: 1px solid var(--border); background: white; overflow-y: auto; }
+  .msg-list-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; color: var(--forest); }
+  .msg-item { display: flex; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+  .msg-item:hover, .msg-item.active { background: rgba(30,58,47,0.04); }
+  .msg-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--forest); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; flex-shrink: 0; }
+  .msg-info { flex: 1; min-width: 0; }
+  .msg-name { font-weight: 700; font-size: 0.85rem; color: var(--charcoal); display: flex; justify-content: space-between; }
+  .msg-time { font-size: 0.68rem; color: var(--muted); font-weight: 400; }
+  .msg-preview { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+  .msg-unread { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; flex-shrink: 0; }
+  .chat-area { display: flex; flex-direction: column; background: var(--cream); }
+  .chat-header { background: white; border-bottom: 1px solid var(--border); padding: 14px 22px; display: flex; align-items: center; gap: 12px; }
+  .chat-messages { flex: 1; padding: 22px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+  .chat-bubble { max-width: 65%; padding: 12px 16px; border-radius: 16px; font-size: 0.85rem; line-height: 1.6; }
+  .bubble-them { background: white; border: 1px solid var(--border); color: var(--charcoal); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .bubble-me { background: var(--forest); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .bubble-time { font-size: 0.65rem; color: var(--muted); margin-top: 4px; }
+  .bubble-time.me { text-align: right; color: rgba(255,255,255,0.5); }
+  .chat-input-row { background: white; border-top: 1px solid var(--border); padding: 14px 22px; display: flex; gap: 10px; align-items: center; }
+  .chat-input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; }
+  .chat-input:focus { border-color: var(--forest); }
+  .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 22px; }
+  .profile-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 28px; text-align: center; }
+  .profile-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--forest); color: white; font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+  .profile-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--forest); font-weight: 700; }
+  .profile-handle { font-size: 0.8rem; color: var(--muted); margin-top: 3px; }
+  .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .profile-stat { background: var(--cream); border-radius: 10px; padding: 12px; text-align: center; }
+  .profile-stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--forest); }
+  .profile-stat span { font-size: 0.68rem; color: var(--muted); }
+  .profile-form { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 28px; }
+  .profile-form h4 { font-weight: 700; font-size: 0.95rem; color: var(--forest); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .profile-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--charcoal); outline: none; margin-top: 6px; }
+  .profile-input:focus { border-color: var(--forest); }
+  .profile-label { font-size: 0.78rem; font-weight: 600; color: var(--charcoal); }
+  .settings-section { background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 20px; }
+  .settings-section-title { padding: 16px 22px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.88rem; color: var(--forest); background: var(--cream); }
+  .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row-label { font-size: 0.88rem; font-weight: 600; color: var(--charcoal); }
+  .settings-row-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .toggle { width: 44px; height: 24px; border-radius: 12px; background: var(--border); position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+  .toggle.on { background: var(--forest); }
+  .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: left 0.2s; }
+  .toggle.on::after { left: 23px; }
+  .saved-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .saved-card { background: white; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; transition: all 0.3s; }
+  .saved-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .saved-card-img { height: 120px; background: var(--sage-light); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; position: relative; }
+  .saved-heart { position: absolute; top: 10px; right: 10px; background: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; box-shadow: var(--shadow); }
+  .saved-card-body { padding: 14px; }
+  .saved-card-name { font-weight: 700; font-size: 0.85rem; color: var(--charcoal); margin-bottom: 4px; }
+  .saved-card-price { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--forest); font-weight: 700; }
+  .price-drop { font-size: 0.68rem; color: var(--rust); font-weight: 700; margin-left: 6px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 9v13h6v-7h6v7h6V9L12 2z"/></svg>
+    </div>
+    <span class="logo-text">Trust<span>Nest</span></span>
+  </div>
+  <ul id="main-nav">
+    <li><a onclick="showPage('home')" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('browse')" id="nav-browse">Browse</a></li>
+    <li><a onclick="showPage('howitworks')" id="nav-howitworks">How It Works</a></li>
+    <li><a onclick="showPage('home')" id="nav-about">About</a></li>
+  </ul>
+  <div class="nav-actions" id="nav-auth">
+    <button class="btn btn-outline" onclick="showPage('login')">Log In</button>
+    <button class="btn btn-primary" onclick="showPage('register')">Get Started</button>
+  </div>
+  <div class="nav-actions" id="nav-user" style="display:none">
+    <div class="user-chip" onclick="showPage('client')">
+      <div class="user-chip-avatar">MR</div>
+      <span class="user-chip-name">Maria R.</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-badge"><span></span> Philippines' Trusted P2P Marketplace</div>
+      <h1>Buy &amp; Sell Home Essentials with <em>Zero Risk</em></h1>
+      <p>TrustNest holds your payment safely in escrow until you confirm your item is exactly as described. Verified sellers, evidence-based disputes, and real peace of mind.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="showPage('register')">Start Shopping</button>
+        <button class="btn btn-outline" onclick="showPage('login')">I'm a Seller</button>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-stat"><strong>4,200+</strong><span>Verified Sellers</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-stat"><strong>₱12M+</strong><span>Safely Escrowed</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-stat"><strong>98.4%</strong><span>Dispute-Free</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="float-card float-card-1">🔒 Escrow Protected</div>
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <span class="hero-card-title">Recent Listings</span>
+          <span class="escrow-badge">TrustNest Escrow</span>
+        </div>
+        <div class="product-list">
+          <div class="product-item">
+            <div class="product-img">🪑</div>
+            <div class="product-info">
+              <div class="product-name">Wooden Dining Chair Set</div>
+              <div class="product-seller">by @carlo_ph</div>
+              <div class="verified-badge">✓ Verified Seller</div>
+            </div>
+            <div class="product-price">₱2,800</div>
+          </div>
+          <div class="product-item">
+            <div class="product-img">🛏️</div>
+            <div class="product-info">
+              <div class="product-name">Queen Bed Frame – Mahogany</div>
+              <div class="product-seller">by @ana_home</div>
+              <div class="verified-badge">✓ Verified Seller</div>
+            </div>
+            <div class="product-price">₱5,500</div>
+          </div>
+          <div class="product-item">
+            <div class="product-img">🪞</div>
+            <div class="product-info">
+              <div class="product-name">Full-Length Wall Mirror</div>
+              <div class="product-seller">by @jm_sells</div>
+              <div class="verified-badge">✓ Verified Seller</div>
+            </div>
+            <div class="product-price">₱1,200</div>
+          </div>
+        </div>
+        <div class="escrow-notice">
+          <div class="escrow-icon">🏦</div>
+          <div>Your payment is held by <strong>TrustNest</strong> until you confirm delivery. We only release to the seller after you approve.</div>
+        </div>
+      </div>
+      <div class="float-card float-card-2">✅ 98% Dispute-Free</div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="section-label">Why TrustNest</div>
+    <div class="section-title">Every Protection You Need in One Place</div>
+    <p class="section-sub">We've built every layer of trust into the platform — so you can focus on finding the right deal.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">🏦</div>
+        <h3>Secure Escrow Payments</h3>
+        <p>Your money never goes directly to the seller. TrustNest holds it safely and releases funds only after you confirm your item arrived in the described condition.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon gold">✅</div>
+        <h3>Verified Seller Badges</h3>
+        <p>Every seller with a badge has submitted a government ID and passed our admin review. Trade with confidence knowing who you're dealing with.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon rust">🎥</div>
+        <h3>Evidence-Based Disputes</h3>
+        <p>Simply upload your unboxing video or photos if something's wrong. Our mediation team reviews the evidence fairly to resolve disputes in your favor.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon sage">💬</div>
+        <h3>Direct In-App Messaging</h3>
+        <p>Chat directly with sellers about item condition, meetup logistics, or local delivery — all within TrustNest, with conversation records preserved.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section how-section">
+    <div class="section-label">Process</div>
+    <div class="section-title">How TrustNest Works</div>
+    <p class="section-sub">A simple, protected flow from browsing to safely holding your new home essential.</p>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Browse &amp; Buy</h4>
+        <p>Find verified home essentials from trusted sellers across your area. Filter by location for meetups.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Escrow Checkout</h4>
+        <p>Pay securely. Your funds go into TrustNest escrow — not the seller — until you're satisfied.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Receive &amp; Verify</h4>
+        <p>Get your item, record your unboxing, and upload evidence directly from your Order page.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Confirm &amp; Release</h4>
+        <p>Happy with your purchase? Confirm it and TrustNest releases payment to the seller. Done!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTINGS PREVIEW -->
+  <section class="section">
+    <div class="section-label">Marketplace</div>
+    <div class="section-title">Popular Listings Near You</div>
+    <div class="listings-grid">
+      <div class="listing-card" onclick="showPage('login')">
+        <div class="listing-img">🛋️<div class="listing-tag">Like New</div></div>
+        <div class="listing-body">
+          <div class="listing-title">3-Seater Fabric Sofa – Light Gray</div>
+          <div class="seller-row">
+            <div class="seller-avatar">LV</div>
+            <span class="seller-name">@lv_minimalist</span>
+            <span class="seller-verified">✓ Verified</span>
+          </div>
+          <div class="listing-meta">
+            <span class="listing-price">₱8,000</span>
+            <span class="listing-location">📍 Quezon City</span>
+          </div>
+        </div>
+      </div>
+      <div class="listing-card" onclick="showPage('login')">
+        <div class="listing-img">🪴<div class="listing-tag">Good Condition</div></div>
+        <div class="listing-body">
+          <div class="listing-title">Plant Stand Set (3 pcs) – Bamboo</div>
+          <div class="seller-row">
+            <div class="seller-avatar">RM</div>
+            <span class="seller-name">@rm_plantlovers</span>
+            <span class="seller-verified">✓ Verified</span>
+          </div>
+          <div class="listing-meta">
+            <span class="listing-price">₱650</span>
+            <span class="listing-location">📍 Makati</span>
+          </div>
+        </div>
+      </div>
+      <div class="listing-card" onclick="showPage('login')">
+        <div class="listing-img">💡<div class="listing-tag">Brand New</div></div>
+        <div class="listing-body">
+          <div class="listing-title">Nordic Pendant Lamp – Rattan</div>
+          <div class="seller-row">
+            <div class="seller-avatar">AC</div>
+            <span class="seller-name">@ac_homedeco</span>
+            <span class="seller-verified">✓ Verified</span>
+          </div>
+          <div class="listing-meta">
+            <span class="listing-price">₱1,800</span>
+            <span class="listing-location">📍 Pasig</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <div class="cta-banner">
+    <div>
+      <h2>Ready to Trade with Confidence?</h2>
+      <p>Join thousands of Filipinos who buy and sell home essentials the safe way — with escrow, verified sellers, and full buyer protection.</p>
+    </div>
+    <div class="cta-actions">
+      <button class="btn btn-gold" onclick="showPage('register')">Create Free Account</button>
+      <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.4);color:white;" onclick="showPage('login')">Log In</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2L3 9v13h6v-7h6v7h6V9L12 2z"/></svg></div>
+      <span class="logo-text">Trust<span style="color:var(--gold)">Nest</span></span>
+    </div>
+    <span>© 2025 TrustNest Philippines. All rights reserved.</span>
+    <span>Designed for Safe P2P Trading 🇵🇭</span>
+  </footer>
+</div>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div class="page" id="page-login">
+  <div class="auth-wrapper">
+    <div class="auth-left">
+      <div class="auth-left-label">Welcome Back</div>
+      <h2>Secure. Trusted. Local.</h2>
+      <p>Log in to access your buyer dashboard, track escrow payments, and browse verified home essentials near you.</p>
+      <div class="auth-perks">
+        <div class="auth-perk"><div class="perk-icon">🏦</div>Track your escrow payments in real time</div>
+        <div class="auth-perk"><div class="perk-icon">📦</div>Monitor your order fulfillment status</div>
+        <div class="auth-perk"><div class="perk-icon">🎥</div>Submit unboxing evidence from your orders</div>
+        <div class="auth-perk"><div class="perk-icon">💬</div>Chat directly with verified sellers</div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-box">
+        <h3>Log In to TrustNest</h3>
+        <p class="sub">Don't have an account? <a onclick="showPage('register')">Register here</a></p>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Password <a class="forgot" href="#">Forgot password?</a></label>
+          <input type="password" placeholder="••••••••" />
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="remember" checked />
+          <label for="remember" style="font-weight:400;color:var(--muted);">Remember me on this device</label>
+        </div>
+        <br/>
+        <!-- Clicking login button instantly goes to client dashboard -->
+        <button class="auth-submit" onclick="loginUser()">Log In to My Account</button>
+        <div class="auth-switch">
+          New to TrustNest? <a onclick="showPage('register')">Create a free account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REGISTER ═══════════════ -->
+<div class="page" id="page-register">
+  <div class="auth-wrapper">
+    <div class="auth-left">
+      <div class="auth-left-label">Create Your Account</div>
+      <h2>Start Trading Safely Today</h2>
+      <p>Join TrustNest and gain access to verified sellers, escrow-protected payments, and a thriving community of Filipino home essential traders.</p>
+      <div class="auth-perks">
+        <div class="auth-perk"><div class="perk-icon">🆓</div>100% free to create a buyer account</div>
+        <div class="auth-perk"><div class="perk-icon">🔒</div>Every purchase is protected by TrustNest Escrow</div>
+        <div class="auth-perk"><div class="perk-icon">🇵🇭</div>Built for Philippine meetups &amp; local deliveries</div>
+        <div class="auth-perk"><div class="perk-icon">✅</div>Only verified sellers can list products</div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form-box">
+        <h3>Create Your Account</h3>
+        <p class="sub">Already registered? <a onclick="showPage('login')">Log in here</a></p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Maria" />
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Reyes" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" placeholder="+63 9XX XXX XXXX" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="At least 8 characters" />
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" placeholder="Repeat your password" />
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="terms" checked />
+          <label for="terms" style="font-weight:400;color:var(--muted);">I agree to the <a href="#" style="color:var(--forest);font-weight:600;">Terms of Service</a> and <a href="#" style="color:var(--forest);font-weight:600;">Privacy Policy</a></label>
+        </div>
+        <br/>
+        <button class="auth-submit" onclick="loginUser()">Create My TrustNest Account</button>
+        <div class="auth-switch">
+          Already have an account? <a onclick="showPage('login')">Log in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CLIENT DASHBOARD ═══════════════ -->
+<div class="page" id="page-client">
+  <div class="client-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div style="padding:20px 24px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:8px;">
+        <div style="width:34px;height:34px;background:rgba(200,151,58,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">MR</div>
+        <div><div style="font-size:0.85rem;font-weight:700;color:white;">Maria Reyes</div><div style="font-size:0.68rem;color:rgba(255,255,255,0.45);">@maria_reyes</div></div>
+      </div>
+      <div class="sidebar-section-label">Marketplace</div>
+      <div class="sidebar-item active" id="sb-home" onclick="showSub('dashboard')"><span class="sidebar-icon">🏠</span> Home</div>
+      <div class="sidebar-item" id="sb-browse" onclick="showSub('cl-browse')"><span class="sidebar-icon">🔍</span> Browse Listings</div>
+      <div class="sidebar-item" id="sb-saved" onclick="showSub('saved')"><span class="sidebar-icon">❤️</span> Saved Items</div>
+      <div class="sidebar-section-label">My Orders</div>
+      <div class="sidebar-item" id="sb-orders" onclick="showSub('orders')"><span class="sidebar-icon">📦</span> All Orders</div>
+      <div class="sidebar-item" id="sb-escrow" onclick="showSub('escrow')"><span class="sidebar-icon">🏦</span> Escrow Payments</div>
+      <div class="sidebar-item" id="sb-evidence" onclick="showSub('evidence')"><span class="sidebar-icon">🎥</span> Upload Evidence</div>
+      <div class="sidebar-item" id="sb-disputes" onclick="showSub('disputes')"><span class="sidebar-icon">⚖️</span> Disputes</div>
+      <div class="sidebar-section-label">Account</div>
+      <div class="sidebar-item" id="sb-messages" onclick="showSub('messages')"><span class="sidebar-icon">💬</span> Messages <span style="background:var(--gold);color:white;font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:auto;">3</span></div>
+      <div class="sidebar-item" id="sb-profile" onclick="showSub('profile')"><span class="sidebar-icon">👤</span> My Profile</div>
+      <div class="sidebar-item" id="sb-settings" onclick="showSub('settings')"><span class="sidebar-icon">⚙️</span> Settings</div>
+      <div class="logout-btn" onclick="logoutUser()"><span>🚪</span> Log Out</div>
+    </div>
+    <!-- Main Content -->
+    <div class="client-main">
+
+      <!-- ── DASHBOARD (default) ── -->
+      <div class="sub-page active" id="sub-dashboard">
+      <div class="client-topbar">
+        <div><h2>My Dashboard</h2><div class="breadcrumb">Home</div></div>
+        <div class="topbar-right">
+          <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+          <div class="user-chip"><div class="user-chip-avatar">MR</div><span class="user-chip-name">Maria Reyes</span></div>
+        </div>
+      </div>
+      <div class="client-content">
+        <div class="welcome-banner">
+          <div><h3>Welcome back, Maria! 👋</h3><p>You have 1 order awaiting your delivery confirmation.</p><div class="escrow-pill">🔒 ₱2,800 held safely in Escrow</div></div>
+          <button class="btn btn-gold" onclick="showSub('cl-browse')">Browse Listings</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-card-label">📦 Total Orders</div><div class="stat-card-val">7</div><div class="stat-card-sub">3 completed this month</div></div>
+          <div class="stat-card"><div class="stat-card-label">🏦 In Escrow</div><div class="stat-card-val">₱2,800</div><div class="stat-card-sub">1 order pending confirmation</div></div>
+          <div class="stat-card"><div class="stat-card-label">❤️ Saved Items</div><div class="stat-card-val">12</div><div class="stat-card-sub">2 price drops recently</div></div>
+        </div>
+        <div class="content-grid">
+          <div class="card">
+            <div class="card-header"><h4>Recent Orders</h4><button class="btn btn-outline btn-sm" onclick="showSub('orders')">View All</button></div>
+            <div class="card-body">
+              <div class="order-item"><div class="order-img">🪑</div><div class="order-info"><div class="order-name">Wooden Dining Chair Set</div><div class="order-date">May 28 · @carlo_ph</div></div><span class="status-pill status-escrow">In Escrow</span><div class="order-amount">₱2,800</div></div>
+              <div class="order-item"><div class="order-img">🪞</div><div class="order-info"><div class="order-name">Full-Length Wall Mirror</div><div class="order-date">May 21 · @jm_sells</div></div><span class="status-pill status-delivered">Delivered ✓</span><div class="order-amount">₱1,200</div></div>
+              <div class="order-item"><div class="order-img">💡</div><div class="order-info"><div class="order-name">Nordic Pendant Lamp</div><div class="order-date">May 15 · @ac_homedeco</div></div><span class="status-pill status-delivered">Delivered ✓</span><div class="order-amount">₱1,800</div></div>
+              <div class="order-item"><div class="order-img">🛋️</div><div class="order-info"><div class="order-name">3-Seater Sofa – Gray</div><div class="order-date">May 8 · @lv_minimalist</div></div><span class="status-pill status-pending">Dispute Open</span><div class="order-amount">₱8,000</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h4>Recommended for You</h4></div>
+            <div class="card-body">
+              <div class="recommend-item"><div class="rec-img">🛏️</div><div class="rec-info"><div class="rec-name">Queen Bed Frame – Mahogany</div><div class="rec-price">₱5,500 <span class="rec-badge">✓ Verified</span></div></div><button class="btn btn-primary btn-sm">View</button></div>
+              <div class="recommend-item"><div class="rec-img">🪴</div><div class="rec-info"><div class="rec-name">Bamboo Plant Stand Set</div><div class="rec-price">₱650 <span class="rec-badge">✓ Verified</span></div></div><button class="btn btn-primary btn-sm">View</button></div>
+              <div class="recommend-item"><div class="rec-img">🖼️</div><div class="rec-info"><div class="rec-name">Woven Wall Art – Boho</div><div class="rec-price">₱900 <span class="rec-badge">✓ Verified</span></div></div><button class="btn btn-primary btn-sm">View</button></div>
+              <div class="recommend-item"><div class="rec-img">🚿</div><div class="rec-info"><div class="rec-name">Shower Head Set – Rainfall</div><div class="rec-price">₱1,100 <span class="rec-badge">✓ Verified</span></div></div><button class="btn btn-primary btn-sm">View</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <!-- ── BROWSE LISTINGS ── -->
+      <div class="sub-page" id="sub-cl-browse">
+        <div class="inner-header"><div><h2>Browse Listings</h2><div class="breadcrumb">Marketplace › Browse</div></div><div class="search-bar" style="max-width:360px;"><input type="text" placeholder="Search items..." style="padding:10px 14px;font-size:0.85rem;"/><button style="padding:10px 18px;font-size:0.82rem;">Search</button></div></div>
+        <div class="inner-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+            <div class="filter-chip active" onclick="toggleChip(this)">All</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Furniture</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Appliances</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Decor</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Lighting</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Brand New</div>
+            <div class="filter-chip" onclick="toggleChip(this)">Like New</div>
+            <div class="filter-chip" onclick="toggleChip(this)">✓ Verified Only</div>
+          </div>
+          <div class="client-browse-grid">
+            <div class="browse-card"><div class="browse-card-img">🛋️<div class="tag tag-like-new">Like New</div></div><div class="browse-card-body"><div class="browse-card-name">3-Seater Sofa – Light Gray</div><div class="browse-card-loc">📍 Quezon City</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱8,000</div><div class="browse-card-seller"><div class="browse-avatar">LV</div><div><div class="browse-seller-name">@lv_minimalist</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+            <div class="browse-card"><div class="browse-card-img">🪑<div class="tag tag-used">Good</div></div><div class="browse-card-body"><div class="browse-card-name">Wooden Dining Chair Set</div><div class="browse-card-loc">📍 Makati</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱2,800</div><div class="browse-card-seller"><div class="browse-avatar">CP</div><div><div class="browse-seller-name">@carlo_ph</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+            <div class="browse-card"><div class="browse-card-img">🛏️<div class="tag tag-new">Brand New</div></div><div class="browse-card-body"><div class="browse-card-name">Queen Bed Frame – Mahogany</div><div class="browse-card-loc">📍 Pasig</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱5,500</div><div class="browse-card-seller"><div class="browse-avatar">AH</div><div><div class="browse-seller-name">@ana_home</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+            <div class="browse-card"><div class="browse-card-img">🪞<div class="tag tag-like-new">Like New</div></div><div class="browse-card-body"><div class="browse-card-name">Full-Length Wall Mirror</div><div class="browse-card-loc">📍 Manila</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱1,200</div><div class="browse-card-seller"><div class="browse-avatar">JM</div><div><div class="browse-seller-name">@jm_sells</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+            <div class="browse-card"><div class="browse-card-img">💡<div class="tag tag-new">Brand New</div></div><div class="browse-card-body"><div class="browse-card-name">Nordic Pendant Lamp</div><div class="browse-card-loc">📍 Taguig</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱1,800</div><div class="browse-card-seller"><div class="browse-avatar">AC</div><div><div class="browse-seller-name">@ac_homedeco</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+            <div class="browse-card"><div class="browse-card-img">🪴<div class="tag tag-new">Brand New</div></div><div class="browse-card-body"><div class="browse-card-name">Bamboo Plant Stand Set</div><div class="browse-card-loc">📍 Quezon City</div><div class="browse-card-divider"></div><div class="browse-card-footer"><div class="browse-card-price">₱650</div><div class="browse-card-seller"><div class="browse-avatar">RM</div><div><div class="browse-seller-name">@rm_plants</div><div class="browse-verified">✓ Verified</div></div></div></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SAVED ITEMS ── -->
+      <div class="sub-page" id="sub-saved">
+        <div class="inner-header"><div><h2>Saved Items</h2><div class="breadcrumb">Marketplace › Saved Items</div></div><span style="font-size:0.82rem;color:var(--muted);">12 items saved</span></div>
+        <div class="inner-body">
+          <div class="saved-grid">
+            <div class="saved-card"><div class="saved-card-img">🛋️<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">3-Seater Sofa – Gray</div><div class="saved-card-price">₱8,000</div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+            <div class="saved-card"><div class="saved-card-img">🛏️<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">Queen Bed Frame</div><div class="saved-card-price">₱5,500 <span class="price-drop">↓ ₱500</span></div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+            <div class="saved-card"><div class="saved-card-img">🪴<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">Bamboo Plant Stand</div><div class="saved-card-price">₱650</div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+            <div class="saved-card"><div class="saved-card-img">💡<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">Nordic Pendant Lamp</div><div class="saved-card-price">₱1,800 <span class="price-drop">↓ ₱200</span></div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+            <div class="saved-card"><div class="saved-card-img">🖼️<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">Woven Wall Art – Boho</div><div class="saved-card-price">₱900</div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+            <div class="saved-card"><div class="saved-card-img">🪞<div class="saved-heart">❤️</div></div><div class="saved-card-body"><div class="saved-card-name">Full-Length Mirror</div><div class="saved-card-price">₱1,200</div><button class="btn btn-primary btn-sm" style="width:100%;margin-top:8px;">View Listing</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ALL ORDERS ── -->
+      <div class="sub-page" id="sub-orders">
+        <div class="inner-header"><div><h2>All Orders</h2><div class="breadcrumb">My Orders › All Orders</div></div><div style="display:flex;gap:8px;"><div class="filter-chip active" onclick="toggleChip(this)">All</div><div class="filter-chip" onclick="toggleChip(this)">In Escrow</div><div class="filter-chip" onclick="toggleChip(this)">Delivered</div><div class="filter-chip" onclick="toggleChip(this)">Disputes</div></div></div>
+        <div class="inner-body">
+          <div class="orders-table">
+            <div class="orders-table-header"><span>Product</span><span>Seller</span><span>Date</span><span>Amount</span><span>Status / Action</span></div>
+            <div class="orders-table-row"><div class="order-product"><div class="order-product-img">🪑</div><div><div class="order-product-name">Wooden Dining Chair Set</div><div class="order-product-seller">4 pcs · Mahogany</div></div></div><div class="table-cell">@carlo_ph</div><div class="table-cell">May 28, 2025</div><div class="table-amount">₱2,800</div><div class="table-actions"><span class="status-pill status-escrow">In Escrow</span><button class="btn btn-primary btn-sm" onclick="showSub('evidence')">Upload</button></div></div>
+            <div class="orders-table-row"><div class="order-product"><div class="order-product-img">🪞</div><div><div class="order-product-name">Full-Length Wall Mirror</div><div class="order-product-seller">Black frame · 5ft</div></div></div><div class="table-cell">@jm_sells</div><div class="table-cell">May 21, 2025</div><div class="table-amount">₱1,200</div><div class="table-actions"><span class="status-pill status-delivered">Delivered ✓</span></div></div>
+            <div class="orders-table-row"><div class="order-product"><div class="order-product-img">💡</div><div><div class="order-product-name">Nordic Pendant Lamp</div><div class="order-product-seller">Rattan · White</div></div></div><div class="table-cell">@ac_homedeco</div><div class="table-cell">May 15, 2025</div><div class="table-amount">₱1,800</div><div class="table-actions"><span class="status-pill status-delivered">Delivered ✓</span></div></div>
+            <div class="orders-table-row"><div class="order-product"><div class="order-product-img">🛋️</div><div><div class="order-product-name">3-Seater Sofa – Gray</div><div class="order-product-seller">Fabric · Light Gray</div></div></div><div class="table-cell">@lv_minimalist</div><div class="table-cell">May 8, 2025</div><div class="table-amount">₱8,000</div><div class="table-actions"><span class="status-pill status-pending">Dispute Open</span><button class="btn btn-outline btn-sm" onclick="showSub('disputes')">View</button></div></div>
+            <div class="orders-table-row"><div class="order-product"><div class="order-product-img">🛏️</div><div><div class="order-product-name">Queen Bed Frame</div><div class="order-product-seller">Mahogany · Queen</div></div></div><div class="table-cell">@ana_home</div><div class="table-cell">Apr 30, 2025</div><div class="table-amount">₱5,500</div><div class="table-actions"><span class="status-pill status-delivered">Delivered ✓</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ESCROW PAYMENTS ── -->
+      <div class="sub-page" id="sub-escrow">
+        <div class="inner-header"><div><h2>Escrow Payments</h2><div class="breadcrumb">My Orders › Escrow Payments</div></div><span style="font-size:0.82rem;color:var(--muted);">Total held: <strong style="color:var(--forest);">₱2,800</strong></span></div>
+        <div class="inner-body">
+          <div class="escrow-card">
+            <div class="escrow-card-header">
+              <div><div class="escrow-card-title">🪑 Wooden Dining Chair Set</div><div class="escrow-card-sub">Ordered May 28, 2025 · Seller: @carlo_ph</div></div>
+              <div style="text-align:right;"><div class="escrow-amount">₱2,800</div><div style="font-size:0.72rem;color:var(--gold);font-weight:600;">🔒 In Escrow</div></div>
+            </div>
+            <div class="escrow-progress">
+              <div class="ep-step"><div class="ep-dot done">✓</div><div class="ep-label">Paid</div></div>
+              <div class="ep-line done"></div>
+              <div class="ep-step"><div class="ep-dot done">✓</div><div class="ep-label">Confirmed</div></div>
+              <div class="ep-line done"></div>
+              <div class="ep-step"><div class="ep-dot current">📦</div><div class="ep-label">In Transit</div></div>
+              <div class="ep-line"></div>
+              <div class="ep-step"><div class="ep-dot todo">📸</div><div class="ep-label">Evidence</div></div>
+              <div class="ep-line"></div>
+              <div class="ep-step"><div class="ep-dot todo">✅</div><div class="ep-label">Released</div></div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;">
+              <button class="btn btn-primary btn-sm" onclick="showSub('evidence')">Upload Unboxing Video</button>
+              <button class="btn btn-outline btn-sm" onclick="showSub('messages')">Message Seller</button>
+            </div>
+          </div>
+          <div style="background:rgba(30,58,47,0.05);border-radius:12px;padding:16px 20px;font-size:0.82rem;color:var(--muted);border:1px solid var(--border);">
+            🏦 <strong style="color:var(--forest);">How Escrow Works:</strong> Your payment is held securely until you confirm delivery and upload evidence. Funds are automatically released after your confirmation or after 7 days if no dispute is filed.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── UPLOAD EVIDENCE ── -->
+      <div class="sub-page" id="sub-evidence">
+        <div class="inner-header"><div><h2>Upload Evidence</h2><div class="breadcrumb">My Orders › Upload Evidence</div></div></div>
+        <div class="inner-body">
+          <div style="background:rgba(200,151,58,0.08);border:1px solid rgba(200,151,58,0.3);border-radius:12px;padding:14px 18px;font-size:0.82rem;color:#7A5A18;margin-bottom:20px;">
+            📌 <strong>Order: Wooden Dining Chair Set</strong> — Upload your unboxing video or photos to confirm delivery. This protects you in any dispute.
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+            <div class="upload-zone"><div class="upload-icon">🎥</div><h4>Unboxing Video</h4><p>MP4, MOV up to 500MB<br>Record while opening the package</p><button class="btn btn-primary btn-sm" style="margin-top:14px;">Choose Video</button></div>
+            <div class="upload-zone"><div class="upload-icon">📸</div><h4>Item Photos</h4><p>JPG, PNG up to 20MB each<br>Show all sides of the item</p><button class="btn btn-primary btn-sm" style="margin-top:14px;">Choose Photos</button></div>
+          </div>
+          <div class="uploaded-files">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Uploaded Files</div>
+            <div class="uploaded-file"><div class="uploaded-file-icon">🎥</div><div class="uploaded-file-name">unboxing_chairs.mp4</div><div class="uploaded-file-size">124 MB</div><div class="uploaded-file-status">✓ Uploaded</div></div>
+            <div class="uploaded-file"><div class="uploaded-file-icon">📸</div><div class="uploaded-file-name">chairs_front.jpg</div><div class="uploaded-file-size">3.2 MB</div><div class="uploaded-file-status">✓ Uploaded</div></div>
+            <div class="uploaded-file"><div class="uploaded-file-icon">📸</div><div class="uploaded-file-name">chairs_side.jpg</div><div class="uploaded-file-size">2.8 MB</div><div class="uploaded-file-status">✓ Uploaded</div></div>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:10px;">
+            <button class="btn btn-primary">Confirm Delivery ✓</button>
+            <button class="btn btn-outline" onclick="showSub('disputes')" style="border-color:var(--rust);color:var(--rust);">File a Dispute</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DISPUTES ── -->
+      <div class="sub-page" id="sub-disputes">
+        <div class="inner-header"><div><h2>Disputes</h2><div class="breadcrumb">My Orders › Disputes</div></div><span style="background:rgba(196,92,42,0.1);color:var(--rust);font-size:0.78rem;font-weight:700;padding:4px 12px;border-radius:20px;">1 Active Dispute</span></div>
+        <div class="inner-body">
+          <div class="dispute-card">
+            <div class="dispute-card-header">
+              <div><div style="font-weight:700;font-size:0.92rem;color:var(--charcoal);">🛋️ 3-Seater Sofa – Light Gray</div><div style="font-size:0.75rem;color:var(--muted);margin-top:3px;">Dispute #DSP-2025-001 · Filed May 10, 2025</div></div>
+              <span class="status-pill status-pending" style="padding:5px 14px;font-size:0.75rem;">Under Review</span>
+            </div>
+            <div class="dispute-card-body">
+              <div class="dispute-side">
+                <h5>Seller's Listing Photos</h5>
+                <div class="dispute-img-row"><div class="dispute-img-box">🛋️</div><div class="dispute-img-box">📐</div><div class="dispute-img-box">🔍</div></div>
+                <div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Seller claimed: <em>"Like New, no damage, clean fabric"</em></div>
+              </div>
+              <div class="dispute-side">
+                <h5>Your Evidence</h5>
+                <div class="dispute-img-row"><div class="dispute-img-box">🎥</div><div class="dispute-img-box">📸</div><div class="dispute-img-box">📸</div></div>
+                <div style="margin-top:10px;font-size:0.8rem;color:var(--muted);">You reported: <em>"Fabric torn on left armrest, not as described"</em></div>
+              </div>
+            </div>
+            <div style="padding:14px 22px;background:rgba(30,58,47,0.03);border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted);">
+              🔍 <strong style="color:var(--forest);">Admin Review in Progress</strong> — Our team is reviewing your submitted evidence. Expected resolution: <strong>within 48 hours</strong>.
+            </div>
+          </div>
+          <div style="background:white;border-radius:14px;border:1px solid var(--border);padding:20px 22px;">
+            <div style="font-weight:700;font-size:0.88rem;color:var(--muted);margin-bottom:12px;">📋 RESOLVED DISPUTES</div>
+            <div style="font-size:0.82rem;color:var(--muted);padding:16px;text-align:center;background:var(--cream);border-radius:10px;">No resolved disputes yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MESSAGES ── -->
+      <div class="sub-page" id="sub-messages">
+        <div class="messages-layout">
+          <div class="msg-list">
+            <div class="msg-list-header">💬 Messages</div>
+            <div class="msg-item active"><div class="msg-avatar" style="background:var(--forest);">CP</div><div class="msg-info"><div class="msg-name">@carlo_ph <span class="msg-time">2m ago</span></div><div class="msg-preview">Thanks! I'll ship tomorrow morning</div></div><div class="msg-unread"></div></div>
+            <div class="msg-item"><div class="msg-avatar" style="background:var(--sage);">JM</div><div class="msg-info"><div class="msg-name">@jm_sells <span class="msg-time">1h ago</span></div><div class="msg-preview">Okay, noted. Meetup at 3pm?</div></div></div>
+            <div class="msg-item"><div class="msg-avatar" style="background:var(--rust);">LV</div><div class="msg-info"><div class="msg-name">@lv_minimalist <span class="msg-time">2h ago</span></div><div class="msg-preview">I'll send you the tracking number</div></div><div class="msg-unread"></div></div>
+            <div class="msg-item"><div class="msg-avatar" style="background:var(--gold);">AH</div><div class="msg-info"><div class="msg-name">@ana_home <span class="msg-time">Yesterday</span></div><div class="msg-preview">It's been delivered, please confirm!</div></div><div class="msg-unread"></div></div>
+            <div class="msg-item"><div class="msg-avatar" style="background:#6B7280;">AC</div><div class="msg-info"><div class="msg-name">@ac_homedeco <span class="msg-time">May 28</span></div><div class="msg-preview">Thank you for your purchase!</div></div></div>
+          </div>
+          <div class="chat-area">
+            <div class="chat-header">
+              <div class="msg-avatar">CP</div>
+              <div><div style="font-weight:700;font-size:0.9rem;color:var(--charcoal);">@carlo_ph</div><div style="font-size:0.72rem;color:var(--forest);font-weight:600;">✓ Verified Seller · Active now</div></div>
+            </div>
+            <div class="chat-messages">
+              <div><div class="chat-bubble bubble-them">Hi! I'm interested in the Wooden Dining Chair Set. Is it still available?</div><div class="bubble-time">May 27, 10:14 AM</div></div>
+              <div><div class="chat-bubble bubble-me">Yes it is! All 4 chairs are in good condition.</div><div class="bubble-time me">May 27, 10:22 AM</div></div>
+              <div><div class="chat-bubble bubble-them">Can we do meetup in Makati? Or do you deliver to QC?</div><div class="bubble-time">May 27, 10:25 AM</div></div>
+              <div><div class="chat-bubble bubble-me">Yes I can deliver to QC. Shipping fee is ₱200. Paid via TrustNest escrow?</div><div class="bubble-time me">May 27, 10:31 AM</div></div>
+              <div><div class="chat-bubble bubble-them">Perfect! Let's do it. I'll place the order now through TrustNest.</div><div class="bubble-time">May 28, 8:00 AM</div></div>
+              <div><div class="chat-bubble bubble-them">Thanks! I'll ship tomorrow morning 🚚</div><div class="bubble-time">May 29, 9:00 AM</div></div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" type="text" placeholder="Type a message..." />
+              <button class="btn btn-primary btn-sm">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MY PROFILE ── -->
+      <div class="sub-page" id="sub-profile">
+        <div class="inner-header"><div><h2>My Profile</h2><div class="breadcrumb">Account › My Profile</div></div><button class="btn btn-primary btn-sm">Save Changes</button></div>
+        <div class="inner-body">
+          <div class="profile-grid">
+            <div>
+              <div class="profile-card">
+                <div class="profile-avatar-big">MR</div>
+                <div class="profile-name">Maria Reyes</div>
+                <div class="profile-handle">@maria_reyes · Buyer</div>
+                <button class="btn btn-outline btn-sm" style="margin-top:14px;width:100%;">Change Photo</button>
+                <div class="profile-stats">
+                  <div class="profile-stat"><strong>7</strong><span>Total Orders</span></div>
+                  <div class="profile-stat"><strong>5</strong><span>Completed</span></div>
+                  <div class="profile-stat"><strong>12</strong><span>Saved Items</span></div>
+                  <div class="profile-stat"><strong>4.9★</strong><span>Rating</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="profile-form">
+              <h4>Personal Information</h4>
+              <div class="form-grid-2">
+                <div><div class="profile-label">First Name</div><input class="profile-input" type="text" value="Maria" /></div>
+                <div><div class="profile-label">Last Name</div><input class="profile-input" type="text" value="Reyes" /></div>
+              </div>
+              <div style="margin-top:14px;"><div class="profile-label">Email Address</div><input class="profile-input" type="email" value="maria.reyes@email.com" /></div>
+              <div style="margin-top:14px;"><div class="profile-label">Mobile Number</div><input class="profile-input" type="tel" value="+63 917 123 4567" /></div>
+              <div style="margin-top:14px;"><div class="profile-label">Home Address (for deliveries)</div><input class="profile-input" type="text" value="123 Mayon St., Quezon City" /></div>
+              <h4 style="margin-top:24px;">Change Password</h4>
+              <div><div class="profile-label">Current Password</div><input class="profile-input" type="password" placeholder="••••••••" /></div>
+              <div class="form-grid-2" style="margin-top:14px;">
+                <div><div class="profile-label">New Password</div><input class="profile-input" type="password" placeholder="••••••••" /></div>
+                <div><div class="profile-label">Confirm New Password</div><input class="profile-input" type="password" placeholder="••••••••" /></div>
+              </div>
+              <button class="btn btn-primary" style="margin-top:20px;width:100%;">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="sub-page" id="sub-settings">
+        <div class="inner-header"><div><h2>Settings</h2><div class="breadcrumb">Account › Settings</div></div></div>
+        <div class="inner-body">
+          <div class="settings-section">
+            <div class="settings-section-title">🔔 Notifications</div>
+            <div class="settings-row"><div><div class="settings-row-label">Order Updates</div><div class="settings-row-sub">Get notified when your order status changes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">Escrow Alerts</div><div class="settings-row-sub">Alerts when funds are held or released</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">New Messages</div><div class="settings-row-sub">Notify me when sellers send a message</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">Price Drop Alerts</div><div class="settings-row-sub">Notify me when saved items drop in price</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">Promotions &amp; Offers</div><div class="settings-row-sub">Receive TrustNest deals and announcements</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">🔒 Privacy &amp; Security</div>
+            <div class="settings-row"><div><div class="settings-row-label">Two-Factor Authentication</div><div class="settings-row-sub">Add extra security to your account</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">Profile Visibility</div><div class="settings-row-sub">Allow sellers to see your buyer profile</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="settings-row"><div><div class="settings-row-label">Save Chat History</div><div class="settings-row-sub">Store message records for dispute evidence</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">💳 Payment Preferences</div>
+            <div class="settings-row"><div><div class="settings-row-label">Default Payment Method</div><div class="settings-row-sub">GCash · 09171234567</div></div><button class="btn btn-outline btn-sm">Change</button></div>
+            <div class="settings-row"><div><div class="settings-row-label">Auto-Confirm Delivery</div><div class="settings-row-sub">Auto-release escrow after 7 days with no dispute</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">⚠️ Danger Zone</div>
+            <div class="settings-row"><div><div class="settings-row-label" style="color:var(--rust);">Delete Account</div><div class="settings-row-sub">Permanently remove your account and all data</div></div><button class="btn btn-sm" style="background:rgba(196,92,42,0.1);color:var(--rust);border:1px solid rgba(196,92,42,0.3);">Delete</button></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end client-layout -->
+</div><!-- end page-client -->
+
+<!-- ═══════════════ BROWSE ═══════════════ -->
+<div class="page" id="page-browse">
+  <!-- Hero -->
+  <div class="browse-hero">
+    <div class="section-label">Marketplace</div>
+    <h1>Browse <span>Home Essentials</span></h1>
+    <p>Discover verified, pre-loved and brand new home items from trusted sellers across the Philippines.</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for furniture, appliances, decor..." />
+      <select>
+        <option>All Categories</option>
+        <option>Furniture</option>
+        <option>Appliances</option>
+        <option>Decor</option>
+        <option>Lighting</option>
+        <option>Storage</option>
+      </select>
+      <button>Search</button>
+    </div>
+    <div class="active-filters">
+      <div class="active-filter-tag">Furniture <button onclick="this.parentElement.remove()">×</button></div>
+      <div class="active-filter-tag">Quezon City <button onclick="this.parentElement.remove()">×</button></div>
+      <div class="active-filter-tag">Under ₱5,000 <button onclick="this.parentElement.remove()">×</button></div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="browse-body">
+    <!-- Filter Panel -->
+    <aside class="filter-panel">
+      <h3>Filters <span onclick="clearFilters()">Clear All</span></h3>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <div class="filter-chip-group">
+          <div class="filter-chip active" onclick="toggleChip(this)">All</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Furniture</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Appliances</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Decor</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Lighting</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Storage</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Bedding</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Condition</label>
+        <div class="filter-chip-group">
+          <div class="filter-chip active" onclick="toggleChip(this)">All</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Brand New</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Like New</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Good</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Fair</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Price Range (₱)</label>
+        <div class="price-range">
+          <input type="text" placeholder="Min" value="0" />
+          <span>—</span>
+          <input type="text" placeholder="Max" value="10,000" />
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Location</label>
+        <div class="filter-chip-group">
+          <div class="filter-chip active" onclick="toggleChip(this)">All Cities</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Quezon City</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Makati</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Pasig</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Manila</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Taguig</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Seller</label>
+        <div class="filter-chip-group">
+          <div class="filter-chip active" onclick="toggleChip(this)">All Sellers</div>
+          <div class="filter-chip" onclick="toggleChip(this)">✓ Verified Only</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Delivery</label>
+        <div class="filter-chip-group">
+          <div class="filter-chip active" onclick="toggleChip(this)">All</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Meetup</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Local Delivery</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <div>
+      <div class="browse-results-header">
+        <p>Showing <strong>48 listings</strong> in Metro Manila</p>
+        <select class="sort-select">
+          <option>Sort: Newest First</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Most Trusted</option>
+        </select>
+      </div>
+
+      <div class="browse-grid">
+        <!-- Card 1 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🛋️<div class="tag tag-like-new">Like New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">3-Seater Fabric Sofa – Light Gray</div>
+            <div class="browse-card-loc">📍 Quezon City · Meetup or Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱8,000</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">LV</div>
+                <div><div class="browse-seller-name">@lv_minimalist</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🪑<div class="tag tag-used">Good</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Wooden Dining Chair Set (4 pcs)</div>
+            <div class="browse-card-loc">📍 Makati · Meetup Available</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱2,800</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">CP</div>
+                <div><div class="browse-seller-name">@carlo_ph</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🛏️<div class="tag tag-new">Brand New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Queen Bed Frame – Mahogany</div>
+            <div class="browse-card-loc">📍 Pasig · Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱5,500</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">AH</div>
+                <div><div class="browse-seller-name">@ana_home</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🪞<div class="tag tag-like-new">Like New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Full-Length Wall Mirror</div>
+            <div class="browse-card-loc">📍 Manila · Meetup Available</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱1,200</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">JM</div>
+                <div><div class="browse-seller-name">@jm_sells</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">💡<div class="tag tag-new">Brand New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Nordic Pendant Lamp – Rattan</div>
+            <div class="browse-card-loc">📍 Taguig · Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱1,800</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">AC</div>
+                <div><div class="browse-seller-name">@ac_homedeco</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 6 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🪴<div class="tag tag-new">Brand New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Bamboo Plant Stand Set (3 pcs)</div>
+            <div class="browse-card-loc">📍 Quezon City · Meetup Available</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱650</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">RM</div>
+                <div><div class="browse-seller-name">@rm_plants</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 7 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🖼️<div class="tag tag-new">Brand New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Woven Wall Art – Boho Style</div>
+            <div class="browse-card-loc">📍 Makati · Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱900</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">BH</div>
+                <div><div class="browse-seller-name">@boho_home</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 8 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🗄️<div class="tag tag-used">Good</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">2-Door Wardrobe Cabinet</div>
+            <div class="browse-card-loc">📍 Pasig · Meetup or Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱3,500</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">KS</div>
+                <div><div class="browse-seller-name">@ks_furniture</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card 9 -->
+        <div class="browse-card" onclick="showPage('login')">
+          <div class="browse-card-img">🚿<div class="tag tag-new">Brand New</div></div>
+          <div class="browse-card-body">
+            <div class="browse-card-name">Rainfall Shower Head Set</div>
+            <div class="browse-card-loc">📍 Manila · Local Delivery</div>
+            <div class="browse-card-divider"></div>
+            <div class="browse-card-footer">
+              <div class="browse-card-price">₱1,100</div>
+              <div class="browse-card-seller">
+                <div class="browse-avatar">MH</div>
+                <div><div class="browse-seller-name">@mh_store</div><div class="browse-verified">✓ Verified</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <span style="color:var(--muted);font-size:0.85rem;">...</span>
+        <button class="page-btn">12</button>
+        <button class="page-btn" style="width:auto;padding:0 14px;">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<div class="page" id="page-howitworks">
+
+  <!-- Hero -->
+  <div class="hiw-hero">
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:14px;">Process</div>
+    <h1>How TrustNest Works</h1>
+    <p>A simple, protected flow from browsing to safely holding your new home essential. Every step is designed to protect both buyers and sellers.</p>
+  </div>
+
+  <!-- Steps -->
+  <div class="hiw-steps-section">
+
+    <!-- Step 1 -->
+    <div class="hiw-step-row">
+      <div class="hiw-step-card">
+        <div class="hiw-step-num">01</div>
+        <div class="hiw-step-icon">🔍</div>
+        <h3>Browse &amp; Discover</h3>
+        <p>Explore hundreds of verified home essential listings from trusted sellers across Metro Manila and beyond.</p>
+        <ul>
+          <li>Filter by category, condition, price &amp; location</li>
+          <li>See Verified Seller badges on every listing</li>
+          <li>View full item photos and descriptions</li>
+          <li>Chat with sellers directly before buying</li>
+        </ul>
+      </div>
+      <div class="hiw-connector">
+        <div class="hiw-connector-line"></div>
+        <div class="hiw-connector-dot"></div>
+        <div class="hiw-connector-line"></div>
+      </div>
+      <div class="hiw-visual">
+        <div class="hiw-visual-inner">
+          <div class="mock-kyc">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Verified Listings</div>
+            <div class="kyc-row"><div class="kyc-check check-done">✓</div><div>🛋️ 3-Seater Sofa — ₱8,000 <span style="font-size:0.7rem;color:var(--forest);font-weight:700;margin-left:6px;">✓ Verified</span></div></div>
+            <div class="kyc-row"><div class="kyc-check check-done">✓</div><div>🪑 Dining Chair Set — ₱2,800 <span style="font-size:0.7rem;color:var(--forest);font-weight:700;margin-left:6px;">✓ Verified</span></div></div>
+            <div class="kyc-row"><div class="kyc-check check-done">✓</div><div>🛏️ Queen Bed Frame — ₱5,500 <span style="font-size:0.7rem;color:var(--forest);font-weight:700;margin-left:6px;">✓ Verified</span></div></div>
+            <div style="margin-top:10px;text-align:center;font-size:0.75rem;color:var(--sage);font-weight:600;">All sellers passed KYC verification</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="hiw-step-row reverse">
+      <div class="hiw-step-card">
+        <div class="hiw-step-num">02</div>
+        <div class="hiw-step-icon">🏦</div>
+        <h3>Escrow Checkout</h3>
+        <p>When you're ready to buy, your payment goes into TrustNest's secure escrow — never directly to the seller.</p>
+        <ul>
+          <li>Pay via GCash, Maya, or bank transfer</li>
+          <li>Funds held safely until you confirm</li>
+          <li>Seller is notified to prepare your order</li>
+          <li>Full refund if seller fails to deliver</li>
+        </ul>
+      </div>
+      <div class="hiw-connector">
+        <div class="hiw-connector-line"></div>
+        <div class="hiw-connector-dot"></div>
+        <div class="hiw-connector-line"></div>
+      </div>
+      <div class="hiw-visual">
+        <div class="hiw-visual-inner">
+          <div class="mock-escrow-flow">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Payment Flow</div>
+            <div class="escrow-flow-step"><div class="dot dot-done"></div>Buyer pays ₱2,800</div>
+            <div class="escrow-flow-step"><div class="dot dot-active"></div>🏦 TrustNest holds funds in Escrow</div>
+            <div class="escrow-flow-step"><div class="dot dot-pending"></div>Seller ships / arranges meetup</div>
+            <div class="escrow-flow-step"><div class="dot dot-pending"></div>Buyer confirms receipt</div>
+            <div class="escrow-flow-step"><div class="dot dot-pending"></div>Funds released to seller</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="hiw-step-row">
+      <div class="hiw-step-card">
+        <div class="hiw-step-num">03</div>
+        <div class="hiw-step-icon">🎥</div>
+        <h3>Receive &amp; Upload Evidence</h3>
+        <p>Once your item arrives, record your unboxing and upload the video or photos directly from your Orders page.</p>
+        <ul>
+          <li>Unboxing video protects you in any dispute</li>
+          <li>Upload photos of item condition on arrival</li>
+          <li>Evidence is stored securely by TrustNest</li>
+          <li>Open a dispute if item doesn't match listing</li>
+        </ul>
+      </div>
+      <div class="hiw-connector">
+        <div class="hiw-connector-line"></div>
+        <div class="hiw-connector-dot"></div>
+        <div class="hiw-connector-line"></div>
+      </div>
+      <div class="hiw-visual">
+        <div class="hiw-visual-inner">
+          <div class="mock-dispute">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Evidence Upload</div>
+            <div class="dispute-row">
+              <div class="dispute-label">Unboxing Video</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div class="evidence-thumb">🎥</div>
+                <span style="font-size:0.8rem;color:var(--forest);font-weight:600;">unboxing_chair.mp4 ✓</span>
+              </div>
+            </div>
+            <div class="dispute-row">
+              <div class="dispute-label">Item Photos</div>
+              <div class="dispute-evidence">
+                <div class="evidence-thumb">📸</div>
+                <div class="evidence-thumb">📸</div>
+                <div class="evidence-thumb">📸</div>
+                <div class="evidence-thumb" style="background:var(--border);color:var(--muted);font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;">+2</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;font-size:0.75rem;color:var(--forest);font-weight:600;text-align:center;">📁 5 files uploaded successfully</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="hiw-step-row reverse">
+      <div class="hiw-step-card">
+        <div class="hiw-step-num">04</div>
+        <div class="hiw-step-icon">✅</div>
+        <h3>Confirm &amp; Release</h3>
+        <p>Happy with your purchase? Confirm the delivery and TrustNest automatically releases the payment to the seller.</p>
+        <ul>
+          <li>One-click confirmation from your Orders page</li>
+          <li>Funds instantly released to seller's wallet</li>
+          <li>Leave a review for the seller</li>
+          <li>Dispute window: 48 hours after delivery</li>
+        </ul>
+      </div>
+      <div class="hiw-connector">
+        <div class="hiw-connector-line"></div>
+        <div class="hiw-connector-dot"></div>
+        <div class="hiw-connector-line"></div>
+      </div>
+      <div class="hiw-visual">
+        <div class="hiw-visual-inner">
+          <div class="mock-confirm">
+            <div class="confirm-circle">✅</div>
+            <div class="confirm-label">Delivery Confirmed!</div>
+            <div class="confirm-sub">₱2,800 released to @carlo_ph</div>
+            <div style="margin-top:12px;background:rgba(30,58,47,0.06);border-radius:10px;padding:10px 16px;width:100%;text-align:left;">
+              <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;">Leave a Review</div>
+              <div style="font-size:1.2rem;letter-spacing:4px;color:var(--gold);">★★★★★</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">"Great seller, item exactly as described!"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="hiw-faq">
+    <div class="section-label">FAQ</div>
+    <div class="section-title">Frequently Asked Questions</div>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What happens if my item doesn't arrive? <span>+</span></div>
+        <div class="faq-a">If your item doesn't arrive within the agreed time, TrustNest will initiate a full refund from escrow. Simply open a dispute from your Orders page and our team will investigate within 24–48 hours.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How long does escrow hold the payment? <span>+</span></div>
+        <div class="faq-a">Funds are held in escrow until you confirm delivery, or for a maximum of 7 days after the seller marks the order as delivered. After 7 days with no dispute, funds are automatically released.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do I become a Verified Seller? <span>+</span></div>
+        <div class="faq-a">Register as a seller, then submit a valid government-issued ID through your Seller Dashboard. Our admin team reviews submissions within 1–3 business days and grants your Verified badge upon approval.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What is the evidence upload for? <span>+</span></div>
+        <div class="faq-a">Uploading an unboxing video or photos protects you as a buyer. If the item arrives damaged or not as described, this evidence is used by our dispute team to decide on a refund or fund release.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is TrustNest free to use? <span>+</span></div>
+        <div class="faq-a">Creating a buyer account is completely free. Sellers pay a small platform fee only upon successful transactions. There are no listing fees or subscription costs.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What payment methods are accepted? <span>+</span></div>
+        <div class="faq-a">TrustNest currently accepts GCash, Maya (PayMaya), and major Philippine bank transfers (BDO, BPI, UnionBank, Metrobank). More payment options are coming soon.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="hiw-cta">
+    <div class="section-label" style="color:var(--gold-light);display:block;text-align:center;margin-bottom:14px;">Ready?</div>
+    <h2>Start Trading with Confidence</h2>
+    <p>Join thousands of Filipinos who buy and sell home essentials the safe, trusted way.</p>
+    <div class="hiw-cta-btns">
+      <button class="btn btn-gold" onclick="showPage('register')">Create Free Account</button>
+      <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.4);color:white;" onclick="showPage('browse')">Browse Listings</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    window.scrollTo(0,0);
+    document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active-link'));
+    const map = { home: 'nav-home', browse: 'nav-browse', howitworks: 'nav-howitworks' };
+    if (map[page]) document.getElementById(map[page]).classList.add('active-link');
+  }
+
+  function showSub(name) {
+    // Show all sub-pages hidden, activate chosen
+    document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('sub-' + name).classList.add('active');
+    // Update sidebar active state
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    const sbMap = {
+      'dashboard': 'sb-home', 'cl-browse': 'sb-browse', 'saved': 'sb-saved',
+      'orders': 'sb-orders', 'escrow': 'sb-escrow', 'evidence': 'sb-evidence',
+      'disputes': 'sb-disputes', 'messages': 'sb-messages', 'profile': 'sb-profile',
+      'settings': 'sb-settings'
+    };
+    if (sbMap[name]) {
+      const el = document.getElementById(sbMap[name]);
+      if (el) el.classList.add('active');
+    }
+    window.scrollTo(0,0);
+  }
+
+  function loginUser() {
+    document.body.classList.add('logged-in');
+    document.getElementById('nav-auth').style.display = 'none';
+    document.getElementById('nav-user').style.display = 'flex';
+    showPage('client');
+    showSub('dashboard');
+  }
+
+  function logoutUser() {
+    document.body.classList.remove('logged-in');
+    document.getElementById('nav-auth').style.display = 'flex';
+    document.getElementById('nav-user').style.display = 'none';
+    showPage('home');
+  }
+
+  function toggleChip(el) { el.classList.toggle('active'); }
+  function clearFilters() { document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active')); }
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const icon = el.querySelector('span');
+    answer.classList.toggle('open');
+    icon.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
